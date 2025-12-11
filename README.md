@@ -1,6 +1,50 @@
 # wedding_web
 
-A new Flutter project.
+Sitio web para boda desarrollado con Flutter Web.
+
+## Despliegue en GitHub Pages
+
+Este proyecto está configurado para desplegarse automáticamente en GitHub Pages de forma gratuita.
+
+### Configuración inicial
+
+1. **Habilita GitHub Pages en tu repositorio:**
+   - Ve a `Settings` → `Pages` en tu repositorio de GitHub
+   - En la sección **"Build and deployment"**:
+     - **Source**: Selecciona `GitHub Actions` (NO selecciones "Deploy from a branch")
+     - **NO necesitas configurar ningún dominio personalizado** - puedes ignorar esa sección
+     - El sitio funcionará automáticamente con el dominio por defecto de GitHub
+   - Guarda los cambios (si hay un botón "Save")
+   
+   **Nota importante:** Si ves una sección sobre "Custom domain" o "Verified domain", puedes ignorarla completamente. No es necesaria para usar GitHub Pages con el dominio gratuito de GitHub.
+
+2. **Ajusta el nombre del repositorio (si es necesario):**
+   - Si tu repositorio se llama diferente a `wedding_web`, edita el archivo `.github/workflows/deploy.yml`
+   - Cambia `--base-href "/wedding_web/"` por `--base-href "/TU_NOMBRE_REPOSITORIO/"`
+
+3. **Haz push a la rama main:**
+   - El workflow se ejecutará automáticamente
+   - Puedes ver el progreso en la pestaña `Actions` de tu repositorio
+
+### URL de tu sitio
+
+Tu sitio estará disponible en:
+- `https://TU_USUARIO.github.io/wedding_web/`
+
+### Desarrollo local
+
+Para ejecutar el proyecto localmente:
+
+```bash
+flutter pub get
+flutter run -d chrome
+```
+
+Para compilar para producción:
+
+```bash
+flutter build web --release
+```
 
 ## Getting Started
 
