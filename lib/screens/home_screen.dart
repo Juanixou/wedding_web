@@ -46,7 +46,7 @@ class HomeScreen extends StatelessWidget {
             const HairSalonsSection(),
             
             // Sección de Formulario RSVP
-            const RSVPFormSection(),
+            //const RSVPFormSection(),
           ],
         ),
       ),
