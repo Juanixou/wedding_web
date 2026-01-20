@@ -2,8 +2,70 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:wedding_web/config/wedding_colors.dart';
 
-class HotelsSection extends StatelessWidget {
+class HotelsSection extends StatefulWidget {
   const HotelsSection({super.key});
+
+  @override
+  State<HotelsSection> createState() => _HotelsSectionState();
+}
+
+class _HotelsSectionState extends State<HotelsSection> {
+  late ScrollController _scrollController;
+  bool _canScrollLeft = false;
+  bool _canScrollRight = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_updateScrollButtons);
+    // Verificar el estado inicial después de que el widget se construya
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateScrollButtons();
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_updateScrollButtons);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _updateScrollButtons() {
+    if (!_scrollController.hasClients) return;
+    
+    final position = _scrollController.position;
+    final canScrollLeft = position.pixels > 0;
+    final canScrollRight = position.pixels < position.maxScrollExtent;
+    
+    if (canScrollLeft != _canScrollLeft || canScrollRight != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = canScrollLeft;
+        _canScrollRight = canScrollRight;
+      });
+    }
+  }
+
+  void _scrollLeft() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.offset - 300,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _scrollRight() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.offset + 300,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   /// Procesa la URL de imagen para asegurar que sea una URL directa
   /// Si es una URL de Google Images, intenta extraer la URL directa de la imagen
@@ -34,36 +96,88 @@ class HotelsSection extends StatelessWidget {
   }
 
   final List<Map<String, String>> hotels = const [
-      {
-        'name': 'Los cigarrales',
-        'url': 'https://hotelcigarrales.com/',
-        'image': 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/167099451.jpg?k=b4269c33352cfa4c937a4554d5b27f891e0a23eed6ec6ae66cdd3d3e7bd9e65a&o=',
-        'phone': '925 22 00 53',
-        'discount': 'Usar código: BODACRCA10102026',
-        'location': 'https://maps.app.goo.gl/5XqADttK3LMrxwoXA',
-      },
     {
-      'name': 'Hotel Cigarral El Bosque',
-      'url': 'https://www.cigarralelbosque.com',
-      'image': 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400',
-      'phone': '925 28 56 40',
-      'location': 'https://maps.google.com/?q=Cigarral+El+Bosque+Toledo',
+      'name': 'Hotel Sol',
+      'url': 'https://hotelyhostalsol.com/',
+      'phone': '925 21 36 50',
+      'discount': 'Llamar por teléfono y decir Boda Carlos y Cristina',
+      'location': 'https://maps.app.goo.gl/wtdanRcY6GAZkfZu5',
+      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Hostal Sol',
+      'url': 'https://hotelyhostalsol.com/',
+      'phone': '925 21 36 50',
+      'discount': 'Llamar por teléfono y decir Boda Carlos y Cristina',
+      'location': 'https://maps.app.goo.gl/wtdanRcY6GAZkfZu5',
+      'image': 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Los Cigarrales',
+      'url': 'https://hotelcigarrales.com/',
+      'phone': '925 22 00 53',
+      'discount': 'BODACRCA10102026',
+      'location': 'https://maps.app.goo.gl/DmE2QdaScTXgkoHj7',
+      'image': 'https://images.unsplash.com/photo-1551882547-ff43c63faf76?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Eurostars Toledo 4*',
+      'url': 'https://www.eurostarshotels.com/eurostars-toledo.html?referer_code=lb0gg00yx&utm_source=google&utm_medium=business&utm_campaign=lb0gg00yx',
+      'phone': '925 28 23 73',
+      'location': 'https://maps.app.goo.gl/25DSEfLXcoZ34RuL6',
+      'image': 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&h=300&fit=crop',
     },
     {
       'name': 'Sercotel Renacimiento',
-      'url': 'https://booking.sercotelhoteles.com/?adult=1&arrive=2026-01-01&chain=30252&child=0&currency=EUR&depart=2026-01-02&gad_campaignid=22729413543&gad_source=1&gbraid=0AAAAADxOOJ3J7Z2m7iXm1X8WfkXyUTV36&gclid=CjwKCAiA09jKBhB9EiwAgB8l-EkV_GgQpSWVkpoP1PD0UWtE-Fild_a0hm4X2occLuYPdZ35iGoNcRoC4jcQAvD_BwE&gclsrc=aw.ds&hotel=40177&level=hotel&locale=es-ES&productcurrency=EUR&rooms=1&segment=noMealPlanAssigned&src=GoogleAds&utm_campaign=ES_SEM_ES_TIER3_HOTEL_ALL_ALL_ALL_GE_NA_GOOGLE&utm_content=TOLEDO-RENACIMIENTO-RENTOL-NA&utm_medium=cpc&utm_source=GOOGLE&utm_term=sercotel%20renacimiento',
-      'image': 'https://cf.bstatic.com/xdata/images/hotel/max1024x768/658827077.jpg?k=63260249480273c0fad4b7bd1c62deeb090d87cfdca7af15082f29c8e4639388&o=',
+      'url': 'https://www.sercotelhoteles.com/es/hotel-toledo-renacimiento?utm_source=google&utm_medium=referral&utm_campaign=metasearch-links',
       'phone': '925 28 41 29',
-      'discount': 'Realizar reserva a través de la web',
-      'location': 'https://maps.app.goo.gl/f15vVVZAZnidkUFo9',
+      'discount': 'Realizar a través de la web',
+      'location': 'https://maps.app.goo.gl/Zw2gYQ96bAqBXLTD8',
+      'image': 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&h=300&fit=crop',
     },
     {
-      'name': 'Hotel San Juan de los Reyes',
-      'url': 'https://www.hotelsanjuan.com',
-      'image': 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400',
-      'phone': '+34 925 25 31 00',
-      'discount': '8% de descuento',
-      'location': 'https://maps.google.com/?q=Hotel+San+Juan+de+los+Reyes+Toledo',
+      'name': 'Sercotel Toledo Imperial',
+      'url': 'https://www.sercotelhoteles.com/es/hotel-toledo-imperial?utm_source=google&utm_medium=referral&utm_campaign=metasearch-links',
+      'phone': '925 28 41 29',
+      'discount': 'Realizar a través de la web',
+      'location': 'https://maps.app.goo.gl/6Zf6xrcrriCfeaZr6',
+      'image': 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Sercotel Alfonso VI',
+      'url': 'https://www.sercotelhoteles.com/es/hotel-alfonso-vi?utm_source=google&utm_medium=referral&utm_campaign=metasearch-links',
+      'phone': '925 28 41 29',
+      'discount': 'Realizar a través de la web',
+      'location': 'https://maps.app.goo.gl/BGBZiwddvAsEsL3p9',
+      'image': 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'AC Hotel',
+      'url': 'https://www.marriott.com/en-us/hotels/madto-ac-hotel-ciudad-de-toledo/overview/?scid=f2ae0541-1279-4f24-b197-a979c79310b0',
+      'phone': '925 28 51 25',
+      'location': 'https://maps.app.goo.gl/u6HnGqpyHVYnw9ks6',
+      'image': 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Hotel Abad',
+      'url': 'https://www.hotelabad.com/es/',
+      'phone': '925 28 35 00',
+      'location': 'https://maps.app.goo.gl/HFEGtyB5X8Kffy4YA',
+      'image': 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'Hotel Beatriz',
+      'url': 'https://www.beatrizhoteles.com/es/hotel-beatriz-toledo-auditorium-spa-en-toledo/?partner=5119',
+      'phone': '925 26 91 00',
+      'location': 'https://maps.app.goo.gl/Rz3qGDgppxqb7xPR6',
+      'image': 'https://images.unsplash.com/photo-1551882547-ff43c63ebb7a?w=500&h=300&fit=crop',
+    },
+    {
+      'name': 'El Bosque',
+      'url': 'https://www.hotelcigarralelbosque.com/',
+      'phone': '925 28 56 40',
+      'location': 'https://maps.app.goo.gl/x76con9vkX7CtaR87',
+      'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&h=300&fit=crop',
     },
   ];
 
@@ -94,21 +208,95 @@ class HotelsSection extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           
-          SizedBox(
-            height: isMobile ? 320 : 360,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 20),
-              itemCount: hotels.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    right: index < hotels.length - 1 ? 20 : 0,
+          Stack(
+            children: [
+              SizedBox(
+                height: isMobile ? 320 : 360,
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  physics: const ClampingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 20),
+                  clipBehavior: Clip.none,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                      hotels.length,
+                      (index) => Padding(
+                        padding: EdgeInsets.only(
+                          right: index < hotels.length - 1 ? 20 : 0,
+                        ),
+                        child: _buildHotelCard(context, hotels[index], isMobile),
+                      ),
+                    ),
                   ),
-                  child: _buildHotelCard(context, hotels[index], isMobile),
-                );
-              },
-            ),
+                ),
+              ),
+              // Flecha izquierda
+              if (_canScrollLeft)
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 8),
+                      decoration: BoxDecoration(
+                        color: WeddingColors.backgroundWhite,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.chevron_left,
+                          color: WeddingColors.burgundyPrimary,
+                          size: 32,
+                        ),
+                        onPressed: _scrollLeft,
+                        tooltip: 'Desplazar hacia la izquierda',
+                      ),
+                    ),
+                  ),
+                ),
+              // Flecha derecha
+              if (_canScrollRight)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: WeddingColors.backgroundWhite,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.chevron_right,
+                          color: WeddingColors.burgundyPrimary,
+                          size: 32,
+                        ),
+                        onPressed: _scrollRight,
+                        tooltip: 'Desplazar hacia la derecha',
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -118,58 +306,61 @@ class HotelsSection extends StatelessWidget {
   Widget _buildHotelCard(BuildContext context, Map<String, String> hotel, bool isMobile) {
     final cardWidth = isMobile ? 260.0 : 280.0;
     
-    return GestureDetector(
-      onTap: () {
-        _showHotelDialog(context, hotel);
-      },
-      child: Container(
-        width: cardWidth,
-        decoration: BoxDecoration(
-          color: WeddingColors.backgroundWhite,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: WeddingColors.borderColor,
-            width: 1,
+    return _DraggableCard(
+      onTap: () => _showHotelDialog(context, hotel),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          width: cardWidth,
+          decoration: BoxDecoration(
+            color: WeddingColors.backgroundWhite,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: WeddingColors.borderColor,
+              width: 1,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-              child: _buildNetworkImage(hotel['image']!),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    hotel['name']!,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                      color: WeddingColors.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Text(
-                        'Ver más',
-                        style: TextStyle(
-                          color: WeddingColors.textSecondary,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(Icons.arrow_forward, size: 16, color: WeddingColors.iconColor),
-                    ],
-                  ),
-                ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: hotel['image'] != null && hotel['image']!.isNotEmpty
+                    ? _buildNetworkImage(hotel['image']!)
+                    : _buildPlaceholderImage(),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hotel['name']!,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: WeddingColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          'Ver más',
+                          style: TextStyle(
+                            color: WeddingColors.textSecondary,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(Icons.arrow_forward, size: 16, color: WeddingColors.iconColor),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -360,6 +551,33 @@ class HotelsSection extends StatelessWidget {
     );
   }
 
+  Widget _buildPlaceholderImage() {
+    return Container(
+      height: 180,
+      width: double.infinity,
+      color: WeddingColors.backgroundLight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.hotel,
+            size: 48,
+            color: WeddingColors.iconColor.withOpacity(0.5),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Hotel',
+            style: TextStyle(
+              fontSize: 14,
+              color: WeddingColors.textSecondary,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildNetworkImage(String imageUrl) {
     // Procesar la URL para asegurar que sea una URL directa
     final processedUrl = _processImageUrl(imageUrl);
@@ -401,6 +619,53 @@ class HotelsSection extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+// Widget que permite diferenciar entre arrastre y click
+class _DraggableCard extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+
+  const _DraggableCard({
+    required this.child,
+    required this.onTap,
+  });
+
+  @override
+  State<_DraggableCard> createState() => _DraggableCardState();
+}
+
+class _DraggableCardState extends State<_DraggableCard> {
+  Offset? _pointerDownPosition;
+  bool _isDragging = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerDown: (event) {
+        _pointerDownPosition = event.position;
+        _isDragging = false;
+      },
+      onPointerMove: (event) {
+        if (_pointerDownPosition != null) {
+          final delta = (event.position - _pointerDownPosition!);
+          // Si el movimiento horizontal es mayor que el vertical, es un arrastre
+          if (delta.dx.abs() > 10 || delta.dy.abs() > 10) {
+            _isDragging = true;
+          }
+        }
+      },
+      onPointerUp: (event) {
+        if (!_isDragging && _pointerDownPosition != null) {
+          // Solo hacer click si no hubo arrastre significativo
+          widget.onTap();
+        }
+        _pointerDownPosition = null;
+        _isDragging = false;
+      },
+      child: widget.child,
     );
   }
 }
