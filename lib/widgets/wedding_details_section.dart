@@ -311,11 +311,144 @@ class WeddingDetailsSection extends StatelessWidget {
                     ),
                   ),
                 ),
+                
+                // Botón de información histórica solo para Ceremonia
+                if (isCeremony) ...[
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      _showHistoricalInfoDialog(context);
+                    },
+                    icon: const Icon(Icons.info_outline, size: 18),
+                    label: const Text(
+                      'Información histórica',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: WeddingColors.buttonPrimary,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ).copyWith(
+                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
+                        (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.hovered)) {
+                            return WeddingColors.buttonPrimaryHover;
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showHistoricalInfoDialog(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 768;
+    
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: isMobile
+              ? const EdgeInsets.all(20)
+              : const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+              maxWidth: isMobile ? double.infinity : 700,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: WeddingColors.borderColor,
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: WeddingColors.shadowColor,
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header con título y botón de cerrar
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: WeddingColors.borderColor,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Información histórica',
+                        style: TextStyle(
+                          fontSize: isMobile ? 22 : 26,
+                          fontWeight: FontWeight.w300,
+                          letterSpacing: 1.5,
+                          color: WeddingColors.textPrimary,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        icon: const Icon(Icons.close),
+                        color: WeddingColors.textPrimary,
+                        tooltip: 'Cerrar',
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Contenido scrolleable
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(
+                      'La Capilla de San Pedro, ubicada en la Catedral Primada de Toledo, entre la puerta del Reloj y la de Santa Catalina, tiene una rica historia que se remonta al siglo XV. Fue fundada en 1415 por el Arzobispo de Toledo Don Sancho de Rojas, quien decidió construirla para sustituir la antigua capilla de San Pedro, que era pequeña y no cumplía con las necesidades del culto. Aunque Rojas no llegó a ver la capilla terminada antes de su muerte en 1422, sus testamentarios continuaron la obra y establecieron la parroquialidad en ella. La capilla fue el lugar de fundación de importantes cofradías y sigue siendo un lugar de gran importancia histórica y religiosa en Toledo. Fue dotada con bienes, ornamentos y alhajas por los albaceas del Arzobispo, y se convirtió en la primera parroquia de Toledo, destinada a atender a los fieles de las cuatro calles cercanas.\n\n'
+                      'La capilla, situada entre la puerta del Reloj y la de Santa Catalina, es más que una capilla, es una pequeña iglesia que hace las veces de parroquia, con una portada gótica y frescos atribuidos a Pedro Berruguete. En su interior, se encuentran el túmulo funerario del fundador, el lienzo de Bayeu "La curación del paralítico" y otras pinturas de Bayeu, así como una verja de entrada del rejero Juan Francés.\n\n'
+                      'La reina Isabel la Católica tuvo una relación directa con la ciudad de Toledo (construcción del Monasterio de San Juan de los Reyes) y con la Catedral en particular. La tradición cuenta que la reina Isabel la Católica utilizaba el Balcón de la Reina como un palco privado para asistir a los oficios religiosos que se celebraban en la Capilla de San Pedro.',
+                      style: TextStyle(
+                        fontSize: isMobile ? 15 : 16,
+                        fontWeight: FontWeight.w300,
+                        height: 1.7,
+                        letterSpacing: 0.5,
+                        color: WeddingColors.textPrimary,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
