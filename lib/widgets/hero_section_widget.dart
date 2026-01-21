@@ -246,7 +246,7 @@ class HeroSectionWidget extends StatelessWidget {
                   ),
                   Flexible(
                     child: Text(
-                      '¿Tú sabes contar? Pues contamos contigo!',
+                      '¿Sabes contar? Pues contamos contigo!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: quoteFontSize,
